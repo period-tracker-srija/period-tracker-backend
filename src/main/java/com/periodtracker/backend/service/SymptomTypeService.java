@@ -1,0 +1,83 @@
+package com.periodtracker.backend.service;
+
+import org.springframework.stereotype.Service;
+
+import com.periodtracker.backend.repository.SymptomOptionRepository;
+import com.periodtracker.backend.repository.SymptomTypeRepository;
+import com.periodtracker.backend.dto.*;
+import com.periodtracker.backend.model.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service 
+public class SymptomTypeService {
+    private final SymptomTypeRepository symptomTypeRepository;
+    private final SymptomOptionRepository symptomOptionRepository;
+
+    public SymptomTypeService(SymptomTypeRepository symptomTypeRepository, SymptomOptionRepository symptomOptionRepository) {
+        this.symptomTypeRepository = symptomTypeRepository;
+        this.symptomOptionRepository = symptomOptionRepository;
+    }
+
+    public List<SymptomTypeResponse> getActiveSymptomTypes() {
+        return symptomTypeRepository.findByActiveTrueOrderByDisplayOrderAsc().stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList());
+    }
+
+    public SymptomTypeResponse createSymptomType(SymptomTypeRequest request) {
+        SymptomType type = new SymptomType();
+        type.setName(request.getName());
+        type.setInputType(request.getInputType());
+        type.setMinValue(request.getMinValue());
+        type.setMaxValue(request.getMaxValue());
+        type.setDefault(false);
+        type.setActive(true);
+        type.setDisplayOrder(nextDisplayOrder());
+        SymptomType saved = symptomTypeRepository.save(type);
+
+        if (request.getOptions() != null) {
+            for (String label : request.getOptions()) {
+                SymptomOption option = new SymptomOption();
+                option.setSymptomType(saved);
+                option.setLabel(label);
+                symptomOptionRepository.save(option);
+            }
+        }
+
+        return toResponse(saved);
+    }
+
+    public void deactivateSymptomType(Long id) {
+        SymptomType type = symptomTypeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Symptom type not found"));
+        type.setActive(false);
+        symptomTypeRepository.save(type);
+    }
+
+    public void reorderSymptomTypes(List<Long> orderedIds) {
+        for (int i = 0; i < orderedIds.size(); i++) {
+            SymptomType type = symptomTypeRepository.findById(orderedIds.get(i))
+                .orElseThrow(() -> new RuntimeException("Symptom type not found"));
+            type.setDisplayOrder(i);
+            symptomTypeRepository.save(type);
+        }
+    }
+
+    private int nextDisplayOrder() {
+        return symptomTypeRepository.findAll().stream()
+            .mapToInt(t -> t.getDisplayOrder() == null ? -1 : t.getDisplayOrder())
+            .max()
+            .orElse(-1) + 1;
+    }
+
+    private SymptomTypeResponse toResponse(SymptomType type) {
+        List<SymptomOptionResponse> options = symptomOptionRepository.findBySymptomTypeId(type.getId()).stream()
+            .map(o -> new SymptomOptionResponse(o.getId(), o.getLabel()))
+            .collect(Collectors.toList());
+
+        return new SymptomTypeResponse(type.getId(), type.getName(), type.getInputType(),
+            type.getMinValue(), type.getMaxValue(), options);
+    }
+}
