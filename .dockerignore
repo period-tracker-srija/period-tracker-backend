@@ -1,0 +1,7 @@
+target/
+.idea/
+*.iml
+.env
+.git
+.DS_Store
+HELP.md
