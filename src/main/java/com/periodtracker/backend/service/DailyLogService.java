@@ -46,7 +46,7 @@ public class DailyLogService {
             .map(entry -> new SymptomEntryResponse(
                 entry.getSymptomType().getId(),
                 entry.getSymptomType().getName(),
-                entry.getValue()))
+                fromJson(entry.getValue())))
             .collect(Collectors.toList());
         
         return new DailyLogResponse(log.getLogDate(), log.getCycleDayType(), symptoms);
@@ -101,6 +101,17 @@ public class DailyLogService {
             return objectMapper.writeValueAsString(value);
         } catch (Exception e) {
             throw new RuntimeException("Could not process symptom value", e);
+        }
+    }
+
+    private Object fromJson(String value) {
+        if(value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(value, Object.class);
+        } catch (Exception e) {
+            return value;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.periodtracker.backend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity 
 @Table(name = "symptoms_types")
@@ -12,6 +13,7 @@ public class SymptomType {
     @Column(unique = true)
     private String name;
 
+    @Column(name = "is_default")
     private boolean isDefault;
     private boolean active = true;
     private Integer displayOrder;
@@ -31,6 +33,7 @@ public class SymptomType {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    @JsonProperty("isDefault")
     public boolean isDefault() { return isDefault; }
     public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
 

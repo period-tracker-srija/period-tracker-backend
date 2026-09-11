@@ -1,6 +1,7 @@
 package com.periodtracker.backend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity 
 @Table(name = "cycle_day_types")
@@ -13,6 +14,8 @@ public class CycleDayType {
     private String name;
 
     private String color;
+
+    @Column(name = "is_default")
     private boolean isDefault;
     private Integer displayOrder;
 
@@ -37,6 +40,7 @@ public class CycleDayType {
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
 
+    @JsonProperty("isDefault")
     public boolean isDefault() { return isDefault; }
     public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
 
