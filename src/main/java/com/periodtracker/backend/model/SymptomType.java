@@ -22,6 +22,8 @@ public class SymptomType {
     private Integer minValue;
     private Integer maxValue;
 
+    // no options field because separate table (similar to cdts in daily log)
+
     
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -30,6 +30,16 @@ public class CycleDayTypeController {
         return cycleDayTypeService.createType(request.getName(), request.getColor());
     }
 
+    @PutMapping("/{id}")
+    public CycleDayType updateType(@PathVariable Long id, @RequestBody CycleDayTypeRequest request) {
+        return cycleDayTypeService.updateType(id, request.getName(), request.getColor());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteType(@PathVariable Long id) {
+        cycleDayTypeService.deleteType(id);
+    }
+
     @PutMapping("/reorder")
     public void reorderTypes(@RequestBody ReorderRequest request) {
         cycleDayTypeService.reorderTypes(request.getOrderedIds());

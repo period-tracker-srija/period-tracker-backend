@@ -3,8 +3,7 @@ package com.periodtracker.backend.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.periodtracker.backend.service.DailyLogService;
-import com.periodtracker.backend.dto.DailyLogRequest;
-import com.periodtracker.backend.dto.DailyLogResponse;
+import com.periodtracker.backend.dto.*;
 import com.periodtracker.backend.model.*;
 
 import java.time.LocalDate;
@@ -20,7 +19,7 @@ public class DailyLogController {
     }
 
     @GetMapping 
-    public List<DailyLog> getAllLogs() {
+    public List<DailyLogResponse> getAllLogs() {
         return dailyLogService.getAllLogs();
     }
 
