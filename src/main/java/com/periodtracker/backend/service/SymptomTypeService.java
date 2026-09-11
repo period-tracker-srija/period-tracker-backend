@@ -26,6 +26,19 @@ public class SymptomTypeService {
             .collect(Collectors.toList());
     }
 
+    public List<SymptomTypeResponse> getAllSymptomTypes() {
+        return symptomTypeRepository.findAllByOrderByDisplayOrderAsc().stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList());
+    }
+
+    public SymptomTypeResponse setActive(Long id, boolean active) {
+        SymptomType type = symptomTypeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Symptom type not found"));
+        type.setActive(active);
+        return toResponse(symptomTypeRepository.save(type));
+    }
+
     public SymptomTypeResponse createSymptomType(SymptomTypeRequest request) {
         SymptomType type = new SymptomType();
         type.setName(request.getName());
@@ -47,6 +60,23 @@ public class SymptomTypeService {
         }
 
         return toResponse(saved);
+    }
+
+    public SymptomTypeResponse updateSymptomType(Long id, SymptomTypeRequest request) {
+        SymptomType type = symptomTypeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Symptom type not found"));
+
+        if(request.getName() != null && !request.getName().isBlank()) {
+            type.setName(request.getName().trim());     // trim leading and trailing whitespaces
+        }
+        if(request.getMinValue() != null) {
+            type.setMinValue(request.getMinValue());
+        }
+        if(request.getMaxValue() != null) {
+            type.setMaxValue(request.getMaxValue());
+        }
+
+        return toResponse(symptomTypeRepository.save(type));
     }
 
     public void deactivateSymptomType(Long id) {
@@ -78,6 +108,6 @@ public class SymptomTypeService {
             .collect(Collectors.toList());
 
         return new SymptomTypeResponse(type.getId(), type.getName(), type.getInputType(),
-            type.getMinValue(), type.getMaxValue(), options);
+            type.getMinValue(), type.getMaxValue(), options, type.isActive());
     }
 }

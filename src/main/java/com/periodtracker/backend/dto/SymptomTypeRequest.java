@@ -21,7 +21,7 @@ public class SymptomTypeRequest {
     public void setMinValue(Integer minValue) { this.minValue = minValue; }
 
     public Integer getMaxValue() { return maxValue; }
-    public void setMaxValue(Integer maxValue) { this.minValue = maxValue; }
+    public void setMaxValue(Integer maxValue) { this.maxValue = maxValue; }
 
     public List<String> getOptions() { return options; }
     public void setOptions(List<String> options) { this.options = options; }

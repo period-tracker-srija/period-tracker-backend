@@ -25,11 +25,16 @@ public class CycleDayTypeService {
         return cycleDayTypeRepository.findAllByOrderByDisplayOrderAsc();
     }
 
+    public List<CycleDayType> getActiveTypes() {
+        return cycleDayTypeRepository.findByActiveTrueOrderByDisplayOrderAsc();
+    }
+
     public CycleDayType createType(String name, String color) {
         CycleDayType type = new CycleDayType();
         type.setName(name);
         type.setColor(color);
         type.setDefault(false);
+        type.setActive(true);
         type.setDisplayOrder(nextDisplayOrder());
         return cycleDayTypeRepository.save(type);   // save returns what it saved
     }
@@ -45,6 +50,13 @@ public class CycleDayTypeService {
             type.setColor(color);
         }
 
+        return cycleDayTypeRepository.save(type);
+    }
+
+    public CycleDayType setActive(Long id, boolean active) {
+        CycleDayType type = cycleDayTypeRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cycle day type not found"));
+        type.setActive(active);
         return cycleDayTypeRepository.save(type);
     }
 

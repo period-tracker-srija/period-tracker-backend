@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import com.periodtracker.backend.service.*;
-import com.periodtracker.backend.dto.CycleDayTypeRequest;
-import com.periodtracker.backend.dto.ReorderRequest;
+import com.periodtracker.backend.dto.*;
 import com.periodtracker.backend.model.*;
 
 import java.util.List;
@@ -20,9 +19,14 @@ public class CycleDayTypeController {
         this.cycleDayTypeService = cycleDayTypeService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<CycleDayType> getAllTypes() {
         return cycleDayTypeService.getAllTypes();
+    }
+
+    @GetMapping
+    public List<CycleDayType> getActiveTypes() {
+        return cycleDayTypeService.getActiveTypes();
     }
 
     @PostMapping 
@@ -33,6 +37,11 @@ public class CycleDayTypeController {
     @PutMapping("/{id}")
     public CycleDayType updateType(@PathVariable Long id, @RequestBody CycleDayTypeRequest request) {
         return cycleDayTypeService.updateType(id, request.getName(), request.getColor());
+    }
+
+    @PutMapping("/{id}/active")
+    public CycleDayType setActive(@PathVariable Long id, @RequestBody ActiveRequest request) {
+        return cycleDayTypeService.setActive(id, request.isActive());
     }
 
     @DeleteMapping("/{id}")

@@ -9,4 +9,5 @@ import java.util.List;
 // @Repository 
 public interface SymptomTypeRepository extends JpaRepository<SymptomType, Long> {
     List<SymptomType> findByActiveTrueOrderByDisplayOrderAsc();
+    List<SymptomType> findAllByOrderByDisplayOrderAsc();
 }

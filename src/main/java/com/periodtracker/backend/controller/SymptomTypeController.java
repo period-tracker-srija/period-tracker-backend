@@ -16,6 +16,11 @@ public class SymptomTypeController {
         this.symptomTypeService = symptomTypeService;
     }
 
+    @GetMapping("/all")
+    public List<SymptomTypeResponse> getAllSymptomTypes() {
+        return symptomTypeService.getAllSymptomTypes();
+    }
+
     @GetMapping 
     public List<SymptomTypeResponse> getActiveSymptomTypes() {
         return symptomTypeService.getActiveSymptomTypes();
@@ -24,6 +29,16 @@ public class SymptomTypeController {
     @PostMapping 
     public SymptomTypeResponse createSymptomType(@RequestBody SymptomTypeRequest request) {
         return symptomTypeService.createSymptomType(request);
+    }
+
+    @PutMapping("/{id}")
+    public SymptomTypeResponse updateSymptomType(@PathVariable Long id, @RequestBody SymptomTypeRequest request) {
+        return symptomTypeService.updateSymptomType(id, request);
+    }
+
+    @PutMapping("/{id}/active")
+    public SymptomTypeResponse setActive(@PathVariable Long id, @RequestBody ActiveRequest request) {
+        return symptomTypeService.setActive(id, request.isActive());
     }
 
     @DeleteMapping("/{id}")

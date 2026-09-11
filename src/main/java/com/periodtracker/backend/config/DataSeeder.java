@@ -48,6 +48,7 @@ public class DataSeeder implements CommandLineRunner {
         type.setName(name);
         type.setColor(color);
         type.setDefault(true);
+        type.setActive(true);
         type.setDisplayOrder(order);
         cycleDayTypeRepository.save(type);
     }

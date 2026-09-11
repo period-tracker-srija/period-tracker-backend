@@ -16,6 +16,9 @@ public class CycleDayType {
     private boolean isDefault;
     private Integer displayOrder;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     
     public Long getId() {
         return id;
@@ -39,4 +42,6 @@ public class CycleDayType {
 
     public Integer getDisplayOrder() { return displayOrder; }
     public void setDisplayOrder(Integer displayOrder) { this.displayOrder = displayOrder; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
