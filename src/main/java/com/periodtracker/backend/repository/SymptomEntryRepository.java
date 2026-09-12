@@ -10,4 +10,5 @@ import java.util.*;
 public interface SymptomEntryRepository extends JpaRepository<SymptomEntry, Long> {
     List<SymptomEntry> findByDailyLogId(Long dailyLogId);
     void deleteByDailyLogId(Long dailyLogId);
+    void deleteBySymptomTypeId(Long symptomTypeId);
 }

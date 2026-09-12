@@ -9,4 +9,5 @@ import java.util.List;
 // @Repository 
 public interface SymptomOptionRepository extends JpaRepository<SymptomOption, Long> {
     List<SymptomOption> findBySymptomTypeId(Long SymptomTypeId);
+    void deleteBySymptomTypeId(Long symptomTypeId);
 }

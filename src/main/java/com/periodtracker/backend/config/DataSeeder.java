@@ -40,6 +40,18 @@ public class DataSeeder implements CommandLineRunner {
             addChoiceSymptom("Cravings", InputType.MULTI_CHOICE,
                 List.of("Chocolate", "Salty", "Sweet", "Carbs", "Fatty Foods"), 6);
             addTextSymptom("Notes", 7);
+            addBooleanSymptom("Spotting", 8);
+        }
+
+        boolean spottingExists = symptomTypeRepository.findAll().stream()
+            .anyMatch(t -> "Spotting".equalsIgnoreCase(t.getName()));
+        
+        if(!spottingExists) {
+            int order = symptomTypeRepository.findAll().stream()
+                .mapToInt(t -> t.getDisplayOrder() == null ? -1 : t.getDisplayOrder())
+                .max()
+                .orElse(-1) + 1;
+            addBooleanSymptom("Spotting", order);
         }
     }
 
@@ -51,6 +63,16 @@ public class DataSeeder implements CommandLineRunner {
         type.setActive(true);
         type.setDisplayOrder(order);
         cycleDayTypeRepository.save(type);
+    }
+
+    private void addBooleanSymptom(String name, int order) {
+        SymptomType type = new SymptomType();
+        type.setName(name);
+        type.setInputType(InputType.BOOLEAN);
+        type.setDefault(true);
+        type.setActive(true);
+        type.setDisplayOrder(order);
+        symptomTypeRepository.save(type);
     }
 
     private void addScaleSymptom(String name, int min, int max, int order) {

@@ -42,8 +42,8 @@ public class SymptomTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public void deactivateSymptomType(@PathVariable("id") Long id) {
-        symptomTypeService.deactivateSymptomType(id);
+    public void deleteSymptomType(@PathVariable("id") Long id) {
+        symptomTypeService.deleteSymptomType(id);
     }
 
     @PutMapping("/reorder")

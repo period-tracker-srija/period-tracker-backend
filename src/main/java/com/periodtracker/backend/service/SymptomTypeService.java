@@ -1,9 +1,9 @@
 package com.periodtracker.backend.service;
 
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
-import com.periodtracker.backend.repository.SymptomOptionRepository;
-import com.periodtracker.backend.repository.SymptomTypeRepository;
+import com.periodtracker.backend.repository.*;
 import com.periodtracker.backend.dto.*;
 import com.periodtracker.backend.model.*;
 
@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 public class SymptomTypeService {
     private final SymptomTypeRepository symptomTypeRepository;
     private final SymptomOptionRepository symptomOptionRepository;
+    private final SymptomEntryRepository symptomEntryRepository;
 
-    public SymptomTypeService(SymptomTypeRepository symptomTypeRepository, SymptomOptionRepository symptomOptionRepository) {
+    public SymptomTypeService(SymptomTypeRepository symptomTypeRepository, SymptomOptionRepository symptomOptionRepository, SymptomEntryRepository symptomEntryRepository) {
         this.symptomTypeRepository = symptomTypeRepository;
         this.symptomOptionRepository = symptomOptionRepository;
+        this.symptomEntryRepository = symptomEntryRepository;
     }
 
     public List<SymptomTypeResponse> getActiveSymptomTypes() {
@@ -79,11 +81,14 @@ public class SymptomTypeService {
         return toResponse(symptomTypeRepository.save(type));
     }
 
-    public void deactivateSymptomType(Long id) {
+    @Transactional
+    public void deleteSymptomType(Long id) {
         SymptomType type = symptomTypeRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Symptom type not found"));
-        type.setActive(false);
-        symptomTypeRepository.save(type);
+
+        symptomEntryRepository.deleteBySymptomTypeId(id);
+        symptomOptionRepository.deleteBySymptomTypeId(id);
+        symptomTypeRepository.delete(type);
     }
 
     public void reorderSymptomTypes(List<Long> orderedIds) {
